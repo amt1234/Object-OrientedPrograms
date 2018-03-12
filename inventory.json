@@ -1,0 +1,17 @@
+{"rice":[
+{"name":"type1","weight":20,"price":80},
+{"name":"type2","weight":10,"price":100},
+{"name":"type3","weight":15,"price":70}
+],
+"pulses":[
+{"name":"type1","weight":10,"price":80},
+{"name":"type2","weight":30,"price":100},
+{"name":"type3","weight":15,"price":70}
+],
+"wheats":[
+{"name":"type1","weight":20,"price":80},
+{"name":"type2","weight":40,"price":100},
+{"name":"type3","weight":55,"price":70}
+]
+
+}
