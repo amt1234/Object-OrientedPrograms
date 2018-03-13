@@ -7,7 +7,7 @@
  ******************************************************************************/
 package com.bridgeit.programs;
 
-import java.sql.Date;
+import java.util.*;
 import java.text.SimpleDateFormat;
 
 import com.bridgeit.utility.Utility;
@@ -22,15 +22,31 @@ public class RegularExpression {
 		System.out.println("Enter your name:");
 		String name = utility.inputString();
 		String arr[] = name.split(" ");
+		if(utility.isName(name)==true)
+		{
+			str = str.replace("<<name>>", arr[0]);
+			str = str.replace("<<full name>>", name);
+		}
+		else
+		{
+			System.out.println("Invalid name");
+		}
 		System.out.println("Enter your Mob No.:");
-		String mob = utility.inputString();
-
+		String mobile = utility.inputString();
+		
+		if(utility.isPhoneNumber(mobile)==true)
+		{
+			str = str.replace("xxxxxxxxxx", mobile);
+		}
+		else
+		{
+			System.out.println("Invalid number");
+		}
+		
 		Date date = new Date(0);
 		String d = new SimpleDateFormat().format(date);
 		String d1[] = d.split(" ");
-		str = str.replace("<<name>>", arr[0]);
-		str = str.replace("<<full name>>", name);
-		str = str.replace("xxxxxxxxxx", mob);
+		
 		str = str.replace("01/01/2016", d1[0]);
 		System.out.println(str);
 

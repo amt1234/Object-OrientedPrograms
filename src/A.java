@@ -48,7 +48,7 @@ try
 	           printwriter.flush();
 	           System.out.println("sucessfully");
 	        printwriter.close();   
-	       utility.inventory(jsonObject);
+	   //    utility.inventory(jsonObject);
 }
 catch(Exception e)
 {
