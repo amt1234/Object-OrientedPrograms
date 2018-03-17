@@ -15,8 +15,6 @@ import java.io.IOException;
 import java.util.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Iterator;
-import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -54,34 +52,73 @@ public class Utility {
 		return 0;
 	}
 
+	/**
+	 * @param mobile
+	 * @return validation of mobile number
+	 */
 	public boolean isPhoneNumber(String mobile) {
 		boolean isValid = false;
-		String expression = "\\+\\d(-\\d{3}){2}-\\d{4}";
-
-		CharSequence inputStr = mobile;
-		Pattern pattern = Pattern.compile(expression);
-		Matcher matcher = pattern.matcher(inputStr);
-		if (matcher.matches()) {
-			isValid = true;
+		Pattern p = Pattern.compile("[7-9][0-9]{9}");
+		Matcher m = p.matcher(mobile);
+		if (m.find() && m.group().equals(mobile)) {
+			return true;
+		} else {
+			return false;
 		}
-
-		return false;
 
 	}
 
+	/**
+	 * @param name
+	 * @return validation of name
+	 */
 	public boolean isName(String name) {
 		boolean isValid = false;
-		String expression = "/[a-z]+/";
+		Pattern p = Pattern.compile("[a-zA-Z][a-zA-Z]*");
+		Matcher m = p.matcher(name);
 
-		CharSequence inputStr = name;
-		Pattern pattern = Pattern.compile(expression);
-		Matcher matcher = pattern.matcher(inputStr);
-		if (matcher.matches()) {
-			isValid = true;
+		if (m.find() && m.group().equals(name)) {
+			return true;
+		} else {
+			return false;
+
 		}
 
-		return false;
+	}
+	
 
+	/**
+	 * name validation
+	 */
+	public void nameValidation(String string) {
+
+		System.out.println("Re-Enter your name:");
+		String name = inputString();
+		String array[] = name.split(" ");
+		if (isName(name) == true) {
+			string = string.replace("<<name>>", array[0]);
+			string = string.replace("<<full name>>", name);
+		} else {
+			System.out.println("Invalid number");
+			nameValidation(string);
+
+		}
+	}
+
+	/**
+	 * mobile number validation
+	 */
+	public void mobileValidation(String string) {
+
+		System.out.println("Re-Enter your Mob No.:");
+		String mobile = inputString();
+
+		if (isPhoneNumber(mobile) == true) {
+			string = string.replace("xxxxxxxxxx", mobile);
+		} else {
+			System.out.println("Invalid number");
+			mobileValidation(string);
+		}
 	}
 
 	/**
@@ -176,7 +213,7 @@ public class Utility {
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws Exception
-	 * calculate total cost of share
+	 *             calculate total cost of share
 	 */
 	public void calculateStockReport() throws IOException, ParseException, Exception {
 		File file = new File("StackReport.json");
@@ -208,6 +245,7 @@ public class Utility {
 	 * Players using 2D array
 	 */
 	public void deckCards() {
+		LinkedHashSet<Integer> randomnumber = new LinkedHashSet<Integer>();
 		String SUITS[] = { "Clubs", "Diamonds", "Hearts", "Spades" };
 		String RANKS[] = { "2", "3", "4", "5", "6", "7", "8", "9", "10", "Jack", "Queen", "King", "Ace" };
 		int size = SUITS.length * RANKS.length;
@@ -219,6 +257,7 @@ public class Utility {
 		}
 		for (int i = 0; i < size; i++) {
 			int random = i + (int) (Math.random() * (size - i));
+			randomnumber.add(new Integer(random));
 			String temp = deck[random];
 			deck[random] = deck[i];
 			deck[i] = temp;
@@ -284,7 +323,7 @@ public class Utility {
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws Exception
-	 * create an account
+	 *             create an account
 	 */
 	public void createAcc() throws IOException, ParseException, Exception {
 		File file = new File("Demo.json");
@@ -326,7 +365,7 @@ public class Utility {
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws Exception
-	 * display an information
+	 *             display an information
 	 */
 	public <E> void display() throws IOException, ParseException, Exception {
 		File file = new File("Demo.json");
@@ -342,9 +381,9 @@ public class Utility {
 
 	/**
 	 * @throws IOException
-	 * @throws ParseException            
+	 * @throws ParseException
 	 * @throws Exception
-	 * to sale shares
+	 *             to sale shares
 	 */
 
 	public void saleShare() throws IOException, ParseException, Exception {
@@ -420,7 +459,7 @@ public class Utility {
 	 * @throws IOException
 	 * @throws ParseException
 	 * @throws Exception
-	 *   to buy shares
+	 *             to buy shares
 	 */
 
 	public void buyShare() throws IOException, ParseException, Exception {
@@ -492,19 +531,26 @@ public class Utility {
 
 	/**
 	 * @return Add doctors record by name, id, specialization and availability
+	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void addDoctors() {
+	public void addDoctors() throws IOException, Exception {
+		File file = new File("doctor.json");
+		FileReader filereader = new FileReader(file);
+		JSONParser parser = new JSONParser();
+		JSONArray array1 = (JSONArray) parser.parse(filereader);
+		JSONObject json = new JSONObject();
 		System.out.println("Enter number of doctors :");
 
 		int num0fDoctor = inputInteger();
-		JSONArray array = new JSONArray();
+
 		for (int i = 0; i < num0fDoctor; i++) {
-			JSONObject json = new JSONObject();
+
 			System.out.println("Enter name of doctor");
 			String name = inputString();
 			json.put("Doctor_Name", name);
 			System.out.println("Enter I.D doctor");
-			int id = inputInteger();
+			String id = inputString();
 			json.put("Doctor_ID", id);
 			System.out.println("Enter Specialization of doctor");
 			String specilization = scanner.next();
@@ -512,15 +558,15 @@ public class Utility {
 			System.out.println("Enter Availablity of doctor");
 			String available = scanner.next();
 			json.put("Doctor_Availiablity", available);
-			array.add(json);
+			array1.add(json);
 		}
 		try {
 			System.out.println("Data has been uploaded :");
-			FileWriter jsonFileWriter = new FileWriter("doctor.json");
-			jsonFileWriter.write(array.toJSONString());
+			FileWriter jsonFileWriter = new FileWriter(file);
+			jsonFileWriter.write(JSONArray.toJSONString(array1));
 			jsonFileWriter.flush();
 			jsonFileWriter.close();
-			System.out.println("Doctor Added:" + array);
+			System.out.println("Doctor Added:" + array1);
 		} catch (IOException e) {
 			System.out.println("exception");
 		}
@@ -528,37 +574,44 @@ public class Utility {
 
 	/**
 	 * Add Patients record by name, id,mobile number and age
+	 * 
+	 * @throws IOException
+	 * @throws Exception
 	 */
-	public void addPatients() {
+	public void addPatients() throws IOException, Exception {
+		File file = new File("Patient.json");
+		FileReader filereader = new FileReader(file);
+		JSONParser parser = new JSONParser();
+		JSONArray array1 = (JSONArray) parser.parse(filereader);
+		JSONObject json1 = new JSONObject();
 		System.out.println("Enter number of Patients: ");
 		int num0fPatients = inputInteger();
-		JSONArray array = new JSONArray();
 		for (int i = 0; i < num0fPatients; i++) {
-			JSONObject json1 = new JSONObject();
+
 			System.out.println("Enter name of Patient");
 			String name = inputString();
 			json1.put("Patient_Name", name);
 
 			System.out.println("Enter I.D Patient");
-			int id = inputInteger();
+			String id = inputString();
 			json1.put("Patient_ID", id);
 
 			System.out.println("Enter mobile number of Patient");
-			int mobileNumber = inputInteger();
+			long mobileNumber = scanner.nextLong();
 			json1.put("Patient_mobileNumber", mobileNumber);
 
 			System.out.println("Enter  Patient age");
 			int age = inputInteger();
 			json1.put("Patient_ID", age);
-			array.add(json1);
+			array1.add(json1);
 		}
 		try {
 			System.out.println("Data has been uploaded :");
-			FileWriter jsonFileWriter = new FileWriter("Patient.json");
-			jsonFileWriter.write(array.toJSONString());
+			FileWriter jsonFileWriter = new FileWriter(file);
+			jsonFileWriter.write(JSONArray.toJSONString(array1));
 			jsonFileWriter.flush();
 			jsonFileWriter.close();
-			System.out.println("Patient Added:" + array);
+			System.out.println("Patient Added:" + array1);
 		} catch (IOException e) {
 			System.out.println("exception");
 
@@ -568,7 +621,7 @@ public class Utility {
 
 	/**
 	 * @throws Exception
-	 *  search Doctor by there name
+	 *             search Doctor by there name
 	 */
 	public void searchDoctor() throws Exception {
 
@@ -577,14 +630,196 @@ public class Utility {
 			JSONArray array = (JSONArray) parser.parse(new FileReader("doctor.json"));
 			System.out.println("Search Doctor_Name :");
 			String name = inputString();
-			for (Object obj : array) {
-				JSONObject object = (JSONObject) obj;
-				String string = (String) object.get("Doctor_Name");
-				if (name.equals(string)) {
-					System.out.println("Doctor_founded" + object);
+			Iterator itr = array.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Doctor_Name").equals(name)) {
+
+					System.out.println("Patient_founded" + jsonobject);
+
 				} else {
-					System.out.println("Not Found !");
+					flag = false;
 				}
+
+			}
+		} catch (IOException e) {
+			System.out.println("exception");
+		}
+	}
+
+	public void searchDoctorm() throws Exception {
+
+		System.out.println("enter the choice");
+		System.out.println("1.search doctor by name");
+		System.out.println("2.search doctor by id");
+		System.out.println("3.search doctor by specialization");
+		System.out.println("4.search doctor by availability");
+		int choice = inputInteger();
+		switch (choice) {
+		case 1:
+			searchbyName();
+			break;
+		case 2:
+			searchbyID();
+			break;
+		case 3:
+			searchbySpecialization();
+			break;
+		case 4:
+			searchbyAvailability();
+			break;
+		default:
+			System.out.println("invalid");
+
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 *             search Patient
+	 */
+	public void searchPatientm() throws Exception {
+
+		System.out.println("enter the choice");
+		System.out.println("1.search patient by name");
+		System.out.println("2.search patient by id");
+
+		int choice = inputInteger();
+		switch (choice) {
+		case 1:
+			searchPatientbyName();
+			break;
+		case 2:
+			searchPatientbyID();
+			break;
+
+		default:
+			System.out.println("invalid");
+
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 *             search by Name
+	 */
+	public void searchbyName() throws Exception {
+		try {
+			JSONParser parser = new JSONParser();
+			JSONArray array = (JSONArray) parser.parse(new FileReader("doctor.json"));
+			System.out.println("Search Doctor_name :");
+			String name = inputString();
+
+			Iterator itr = array.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Doctor_Name").equals(name)) {
+
+					System.out.println("Doctor_founded" + jsonobject);
+
+				} else {
+					flag = false;
+				}
+
+			}
+		}
+
+		catch (IOException e) {
+			System.out.println("exception");
+		}
+
+	}
+
+	/**
+	 * @throws Exception
+	 *             search by ID
+	 */
+	public void searchbyID() throws Exception {
+		try {
+			JSONParser parser = new JSONParser();
+			JSONArray array = (JSONArray) parser.parse(new FileReader("doctor.json"));
+			System.out.println("Search doctor_ID :");
+			String id = inputString();
+			Iterator itr = array.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Doctor_ID").equals(id)) {
+
+					System.out.println("doctar_founded" + jsonobject);
+
+				} else {
+					flag = false;
+				}
+
+			}
+		}
+
+		catch (IOException e) {
+			System.out.println("exception");
+		}
+
+	}
+
+	/**
+	 * @throws Exception
+	 *             search doctor by Specialization
+	 */
+	public void searchbySpecialization() throws Exception {
+		try {
+			JSONParser parser = new JSONParser();
+			JSONArray array = (JSONArray) parser.parse(new FileReader("doctor.json"));
+			System.out.println("Search doctor by specialization:");
+			String name = inputString();
+
+			Iterator itr = array.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Doctor_Specialization").equals(name)) {
+
+					System.out.println("Doctor_founded" + jsonobject);
+
+				} else {
+					flag = false;
+				}
+
+			}
+		} catch (Exception e) {
+			System.out.println(" ");
+		}
+	}
+
+	/**
+	 * @throws Exception
+	 *             search doctor by Availability
+	 */
+	public void searchbyAvailability() throws Exception {
+		try {
+			JSONParser parser = new JSONParser();
+			JSONArray array = (JSONArray) parser.parse(new FileReader("doctor.json"));
+			System.out.println("Search doctor by availability :");
+			String name = inputString();
+
+			Iterator itr = array.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Doctor_Availiablity").equals(name)) {
+
+					System.out.println("doctor_founded" + jsonobject);
+
+				} else {
+					flag = false;
+				}
+
 			}
 		} catch (IOException e) {
 			System.out.println("exception");
@@ -594,7 +829,7 @@ public class Utility {
 	/**
 	 * @throws Exception
 	 * 
-	 *search patient by there name
+	 *             search patient by there name
 	 */
 	public void searchPatient() throws Exception {
 		try {
@@ -602,74 +837,166 @@ public class Utility {
 			JSONArray array = (JSONArray) parser.parse(new FileReader("Patient.json"));
 			System.out.println("Search Patient_Name :");
 			String name = inputString();
-			for (Object obj : array) {
-				JSONObject object = (JSONObject) obj;
-				String string = (String) object.get("Patient_Name");
-				if (name.equals(string)) {
-					System.out.println("Patient_founded" + object);
+
+			Iterator itr = array.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Patient_Name").equals(name)) {
+
+					System.out.println("Patient_founded" + jsonobject);
+
 				} else {
-					System.out.println("Not Found !");
+					flag = false;
 				}
+
 			}
+		}
+
+		catch (IOException e) {
+			System.out.println("exception");
+		}
+
+	}
+
+	/**
+	 * @throws Exception
+	 *             search Patient by Name
+	 */
+	public void searchPatientbyName() throws Exception {
+		try {
+			JSONParser parser = new JSONParser();
+			JSONArray array = (JSONArray) parser.parse(new FileReader("Patient.json"));
+			System.out.println("Search Patient_Name :");
+			String name = inputString();
+
+			Iterator itr = array.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Patient_Name").equals(name)) {
+
+					System.out.println("Patient_founded" + jsonobject);
+
+				} else {
+					flag = false;
+				}
+
+			}
+		}
+
+		catch (IOException e) {
+			System.out.println("exception");
+		}
+
+	}
+
+	/**
+	 * @throws Exception
+	 *             search Patient by ID
+	 */
+	public void searchPatientbyID() throws Exception {
+		try {
+			JSONParser parser = new JSONParser();
+			JSONArray array = (JSONArray) parser.parse(new FileReader("Patient.json"));
+			System.out.println("Search Patient_ID :");
+			String id = inputString();
+			Iterator itr = array.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Patient_ID").equals(id)) {
+
+					System.out.println("Patient_founded" + jsonobject);
+
+				} else {
+					flag = false;
+				}
+
+			}
+		}
+
+		catch (IOException e) {
+			System.out.println("exception");
+		}
+
+	}
+
+	/**
+	 * take an appointment of doctor with date and generate report
+	 * 
+	 * @throws Exception
+	 * @throws IOException
+	 */
+	public void takeAppointment1() throws IOException, Exception {
+		File file = new File("doctor.json");
+		FileReader filereader = new FileReader(file);
+		JSONParser parser = new JSONParser();
+		JSONArray array1 = (JSONArray) parser.parse(filereader);
+		System.out.println("Please enter Patient_Name");
+		String patient_name = inputString();
+		System.out.println("Enter the date for appointment");
+		String stringDate = inputString();
+		System.out.println("Enter Doctor name for to take an Appointment");
+		String doctername = inputString();
+
+		String docInfo = null;
+		try {
+			JSONArray array = (JSONArray) parser.parse(new FileReader(file));
+			Iterator itr = array.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Doctor_Name").equals(doctername)) {
+
+					System.out.println("Doctor_founded" + jsonobject);
+
+				}
+
+				flag = false;
+			}
+			docInfo = doctername;
+
+			JSONArray array2 = new JSONArray();
+
+			JSONObject r = (JSONObject) parser.parse(new FileReader("Appointment.json"));
+			JSONArray appointmentFileObj = (JSONArray) r.get("Doctor_name");
+			JSONObject obj1 = new JSONObject();
+
+			if ((obj1.containsKey(doctername)) && (appointmentFileObj.size() < 5)) {
+
+				obj1.put("Doctor_name", doctername);
+
+				obj1.put("Patient_Name", patient_name);
+				obj1.put("Booking Date ", (stringDate));
+				appointmentFileObj.add(obj1);
+				r.put("Doctor_name", appointmentFileObj);
+				FileWriter filewriter = new FileWriter("Appointment.json");
+				filewriter.write(JSONObject.toJSONString(r));
+				filewriter.flush();
+				filewriter.close();
+			}
+			System.out.println("hello " + patient_name + " Your Appointment is fixed  With Doctor " + docInfo + " on: "
+					+ (stringDate));
+
 		} catch (IOException e) {
 			System.out.println("exception");
 		}
 	}
 
 	/**
-	 * take an appointment of doctor with date and generate report
+	 * @throws Exception
+	 *             add user in address book
 	 */
-	public void takeAppointment() {
-		System.out.println("Please enter Patient_Name");
-		String patient_name = inputString();
-		System.out.println("Enter Doctor_Name for to take an Appointment");
-		String doctername = inputString();
-		System.out.println("Enter the date");
-		String stringDate = inputString();
-
-		String doctorInfo = null;
-
-		try {
-			JSONParser parser = new JSONParser();
-			JSONArray array = (JSONArray) parser.parse(new FileReader("doctor.json"));
-			for (int i = 0; i < array.size(); i++) {
-				JSONObject obj = (JSONObject) array.get(i);
-				String doctorName = (String) obj.get("Doctor_Name");
-
-				if (doctorName.equals(doctername)) {
-					doctorInfo = doctorName;
-				} else {
-					System.out.println("doctors not found in this name");
-				}
-			}
-			JSONArray appointmentFileObj = new JSONArray();
-
-			JSONObject obj1 = new JSONObject();
-
-			obj1.put("Doctor_Name", doctorInfo);
-
-			obj1.put("Patient_Name", patient_name);
-			obj1.put("Booking Date ", (stringDate));
-			appointmentFileObj.add(obj1);
-			FileWriter filewriter = new FileWriter("Appointment.json");
-			filewriter.write(appointmentFileObj.toJSONString());
-			filewriter.flush();
-			filewriter.close();
-			System.out.println("hello " + patient_name + " Your Appointment is fixed  With Doctor " + doctorInfo
-					+ " on: " + (stringDate));
-			System.exit(0);
-
-		} catch (Exception e) {
-			System.out.println("exception");
-		}
-	}
-	
-	public void addUser() throws Exception
-	{
-		File file=new File("AddressBook.json");
+	public void addUser() throws Exception {
+		File file = new File("AddressBook.json");
 		boolean check = true;
 		while (check == true) {
-			System.out.println(" add user: y or n");
+			System.out.println(" add user: y(yes) or n(no)");
 			char character = scanner.next().charAt(0);
 			if (character == 'y') {
 
@@ -677,18 +1004,18 @@ public class Utility {
 				JSONParser parser = new JSONParser();
 				JSONArray array1 = (JSONArray) parser.parse(filereader);
 				JSONObject json = new JSONObject();
-				
-				System.out.println("Enter full name");
+
+				System.out.println("Enter name");
 				String name = inputString();
 				System.out.println("Enter Address");
 				String address = inputString();
 				System.out.println("Enter City");
-				String city= inputString();
+				String city = inputString();
 				System.out.println("Enter state");
 				String state = inputString();
 				System.out.println("Enter ZIP");
 				int zip = inputInteger();
-				
+
 				json.put("Name", name);
 				json.put("Address", address);
 				json.put("City", city);
@@ -704,113 +1031,117 @@ public class Utility {
 			} else {
 				check = false;
 			}
+		}
 	}
-	}
-	public void editInformation() throws IOException, Exception
-	{
+
+	/**
+	 * @throws IOException
+	 * @throws Exception
+	 *             edit information of existing user
+	 */
+	public void editInformation() throws IOException, Exception {
 		File file = new File("AddressBook.json");
 
 		FileReader filereader = new FileReader(file);
 		JSONParser parser = new JSONParser();
 		JSONArray book = (JSONArray) parser.parse(filereader);
-		
 
 		System.out.println("Enter the user name for edit information");
 		String name = inputString();
 		Iterator itr = book.iterator();
-		
+
 		boolean flag = false;
 		while (itr.hasNext()) {
 			JSONObject jsonobject = (JSONObject) itr.next();
-			if (jsonobject.get("Name").equals(name)) 
-			{
-				
-				
+			if (jsonobject.get("Name").equals(name)) {
+
 				System.out.println("Enter the Address");
-				String newaddress=inputString();
+				String newaddress = inputString();
 				String address = (String) jsonobject.get("Address");
-				
+
 				System.out.println("Enter the city");
-				String newcity=inputString();
+				String newcity = inputString();
 				String city = (String) jsonobject.get("City");
-				
+
 				System.out.println("Enter the State");
-				String newstate=inputString();
+				String newstate = inputString();
 				String state = (String) jsonobject.get("State");
-				
+
 				jsonobject.remove("Address");
 				jsonobject.remove("City");
 				jsonobject.remove("State");
-				
 
 				jsonobject.put("Address", newaddress);
 				jsonobject.put("City", newcity);
 				jsonobject.put("State", newstate);
-				
+
 				System.out.println("edit information sucessfully");
-				
+
 			}
 			FileWriter fs = new FileWriter(file);
 			fs.write(JSONValue.toJSONString(book));
 			fs.flush();
 			fs.close();
-			flag=true;
+			flag = true;
 		}
 		if (flag == false) {
 			System.out.println("User name not exits");
 		}
-		
-		}
-	
-	public void deleteUser() throws Exception
-	{
+
+	}
+
+	/**
+	 * @throws Exception
+	 *             delete user if not required
+	 */
+	public void deleteUser() throws Exception {
 		File file = new File("AddressBook.json");
 
 		FileReader filereader = new FileReader(file);
 		JSONParser parser = new JSONParser();
 		JSONArray bookarray = (JSONArray) parser.parse(filereader);
-		try
-		{
+		try {
 
-		System.out.println("Enter the user name for delete ");
-		String name = inputString();
-		Iterator itr = bookarray.iterator();
-		
-		boolean flag = false;
-		while (itr.hasNext()) {
-			JSONObject jsonobject = (JSONObject) itr.next();
-			if (jsonobject.get("Name").equals(name)) 
-			{
-				for(int i=0;i<bookarray.size();i++)
-				{
-					if(bookarray.get(i).equals(jsonobject))
-							{
-								bookarray.remove(i);
-								break;
-						
-							}
+			System.out.println("Enter the user name for delete ");
+			String name = inputString();
+			Iterator itr = bookarray.iterator();
+
+			boolean flag = false;
+			while (itr.hasNext()) {
+				JSONObject jsonobject = (JSONObject) itr.next();
+				if (jsonobject.get("Name").equals(name)) {
+					for (int i = 0; i < bookarray.size(); i++) {
+						if (bookarray.get(i).equals(jsonobject)) {
+							bookarray.remove(i);
+							break;
+
+						}
+					}
+
+					System.out.println("delete user information sucessfully");
+
 				}
-			
-				System.out.println("delete user information sucessfully");
-				
+				FileWriter fs = new FileWriter(file);
+				fs.write(JSONValue.toJSONString(bookarray));
+				fs.flush();
+				fs.close();
+				flag = true;
 			}
-			FileWriter fs = new FileWriter(file);
-			fs.write(JSONValue.toJSONString(bookarray));
-			fs.flush();
-			fs.close();
-			flag=true;
+			if (flag == false) {
+				System.out.println("User name not exits");
 			}
-		if (flag == false) {
-			System.out.println("User name not exits");
-		}
-		}
-		catch(Exception e)
-		{
+		} catch (Exception e) {
 			System.out.println(" ");
 		}
-		
+
 	}
-	
+
+	/**
+	 * @throws IOException
+	 * @throws ParseException
+	 * @throws Exception
+	 *             Display user report
+	 */
 	public <E> void displayReprt() throws IOException, ParseException, Exception {
 		File file = new File("AddressBook.json");
 		FileReader filereader = new FileReader(file);
@@ -820,7 +1151,7 @@ public class Utility {
 		while (itrator.hasNext()) {
 			JSONObject object = (JSONObject) itrator.next();
 			System.out.println(object);
-			}
+		}
 	}
-	
+
 }

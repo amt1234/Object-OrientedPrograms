@@ -21,6 +21,7 @@ public class CliniqueManagement {
 			System.out.println("Enter 3 to Search Doctor");
 			System.out.println("Enter 4 to Search Patient");
 			System.out.println("Enter 5 to Take an appoitment");
+			System.out.println("Enter 6 to Exit");
 			int choice = utility.inputInteger();
 			switch (choice) {
 			case 1:
@@ -30,14 +31,16 @@ public class CliniqueManagement {
 				utility.addPatients();
 				break;
 			case 3:
-				utility.searchDoctor();
+				utility.searchDoctorm();
 				break;
 			case 4:
-				utility.searchPatient();
+				utility.searchPatientm();
 				break;
 			case 5:
-				utility.takeAppointment();
+				utility.takeAppointment1();
 				break;
+			case 6:
+				System.exit(0);
 			default:
 				System.out.println("Invalid case");
 

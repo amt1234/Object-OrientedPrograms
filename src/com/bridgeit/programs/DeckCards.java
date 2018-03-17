@@ -15,7 +15,7 @@ import com.bridgeit.utility.Utility;
 public class DeckCards {
 
 	public static void main(String[] args) {
-		Utility utility=new Utility();
+		Utility utility = new Utility();
 		utility.deckCards();
 
 	}
